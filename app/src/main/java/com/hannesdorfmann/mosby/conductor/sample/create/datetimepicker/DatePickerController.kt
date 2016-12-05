@@ -19,14 +19,11 @@ class DatePickerController() : Controller() {
     fun onDatePicked(year: Int, month: Int, day: Int)
   }
 
-  constructor(listenerController: DatePickedListner) : this() {
-    if (listenerController is Controller) {
-      targetController = listenerController
-    }
-    else throw IllegalArgumentException(
-        "The passed DatePickedListener must extend from Controller and implement DatePickedListener")
-  }
+  private lateinit var listenerController: DatePickedListner
 
+  constructor(listenerController_: DatePickedListner) : this() {
+    listenerController = listenerController_
+  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
     val view = inflater.inflate(R.layout.controller_date_picker, container, false)
@@ -35,7 +32,7 @@ class DatePickerController() : Controller() {
     datePicker.minDate = now.toEpochSecond() * 1000L
 
     datePicker.init(now.year, now.monthValue, now.dayOfMonth, { calendarView, year, month, day ->
-      (targetController as DatePickedListner).onDatePicked(year, month, day)
+      listenerController.onDatePicked(year, month, day)
     })
 
     return view

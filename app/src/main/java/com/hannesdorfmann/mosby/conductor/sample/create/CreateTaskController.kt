@@ -29,6 +29,7 @@ import com.hannesdorfmann.mosby.conductor.sample.navigation.changehandlers.DateT
 import com.hannesdorfmann.mosby.conductor.viewstate.MvpViewStateController
 import com.jakewharton.rxbinding.widget.textChanges
 import com.primetime.utils.recyclerview.GridSpacingItemDecoration
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -36,7 +37,8 @@ import javax.inject.Inject
  *
  * @author Hannes Dorfmann
  */
-class CreateTaskController : CreateTaskView, MvpViewStateController<CreateTaskView, CreateTaskPresenter, CreateTaskViewState>() {
+class CreateTaskController : CreateTaskView, DateTimePickerController.DateTimePickedListner
+        , MvpViewStateController<CreateTaskView, CreateTaskPresenter, CreateTaskViewState>() {
 
   private val PHOTO_INTENT_CODE = 1234
 
@@ -94,7 +96,7 @@ class CreateTaskController : CreateTaskView, MvpViewStateController<CreateTaskVi
         1).map { it.toString() }.subscribe { presenter.setTaskDescription(it) }
     date.setOnClickListener {
       router.pushController(
-          RouterTransaction.with(DateTimePickerController())
+          RouterTransaction.with(DateTimePickerController(this))
               .popChangeHandler(DateTimePickerCircularRevealChangeHandler())
               .pushChangeHandler(DateTimePickerCircularRevealChangeHandler())
       )
@@ -140,6 +142,13 @@ class CreateTaskController : CreateTaskView, MvpViewStateController<CreateTaskVi
     imagesRecyclerView.layoutManager = GridLayoutManager(activity, columnCount)
     imagesRecyclerView.addItemDecoration(GridSpacingItemDecoration(columnCount, itemSpace))
     return view
+  }
+
+  override fun onDateTimePicked(year: Int, month: Int, day: Int, hour: Int, minute: Int) {
+    val c = Calendar.getInstance()
+    c.set(year, month, day, hour, minute)
+    date.text = c.time.toString()
+    router.popCurrentController()
   }
 
   override fun showForm() {

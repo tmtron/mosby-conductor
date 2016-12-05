@@ -16,7 +16,12 @@ import me.relex.circleindicator.CircleIndicator
  *
  * @author Hannes Dorfmann
  */
-class DateTimePickerController : Controller(), DatePickerController.DatePickedListner, TimePickerController.TimePickedListner {
+class DateTimePickerController() : Controller()
+        , DatePickerController.DatePickedListner, TimePickerController.TimePickedListner {
+
+  interface DateTimePickedListner {
+    fun onDateTimePicked(year: Int, month: Int, day: Int, hour: Int, minute: Int)
+  }
 
   private val KEY_YEAR = "year"
   private val KEY_MONTH = "month"
@@ -34,6 +39,12 @@ class DateTimePickerController : Controller(), DatePickerController.DatePickedLi
   private lateinit var backButton: Button
   private lateinit var nextButton: Button
   private lateinit var viewPager: ViewPager
+
+  private lateinit var listenerController: DateTimePickedListner
+
+  constructor(listenerController_: DateTimePickedListner) : this() {
+    listenerController = listenerController_
+  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
     val view = inflater.inflate(R.layout.controller_datetime_picker, container, false)
@@ -112,7 +123,7 @@ class DateTimePickerController : Controller(), DatePickerController.DatePickedLi
   }
 
   private inline fun submitDateTime() {
-
+    listenerController.onDateTimePicked(year, month, day, hour, minute)
   }
 
   override fun onDatePicked(year: Int, month: Int, day: Int) {
