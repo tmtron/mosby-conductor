@@ -5,7 +5,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.1.2'
+    classpath 'com.android.tools.build:gradle:2.2.2'
 
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
@@ -28,7 +28,7 @@ ext {
 
   mosby = '2.0.1'
   conductor = '2.0.1'
-  supportLib = '24.0.0'
+  supportLib = '25.0.1'
   mockito = '1.10.19'
   powermock='1.6.4'
   junit = '4.12'
